@@ -166,6 +166,7 @@ def process(file, group):
     image = convert(file, group)
     print("magic is happenning")
     c = hough_transform_p(image)
+    os.system("rm %s" %image)
     return c
 
 
