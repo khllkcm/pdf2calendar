@@ -10,6 +10,7 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 import datetime
 from dateutil.rrule import *
+from googlecalendar import Calendar
 
 
 def parse_date(date, start=True):
@@ -168,16 +169,6 @@ def process(file, group):
     return c
 
 
-def get_credentials():
-    store = file.Storage("credentials.json")
-    credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
-        flow.user_agent = APPLICATION_NAME
-        credentials = tools.run_flow(flow, store)
-    return credentials
-
-
 def add_date(c, start_date, end_date):
     start = ["%sT08:30:00", "%sT10:10:00", "%sT11:50:00", "%sT14:20:00", "%sT16:00:00"]
     end = ["%sT10:00:00", "%sT11:40:00", "%sT13:20:00", "%sT15:50:00", "%sT17:30:00"]
@@ -233,13 +224,7 @@ def add_date(c, start_date, end_date):
 
 
 if __name__ == "__main__":
-    SCOPES = "https://www.googleapis.com/auth/calendar"
-    CLIENT_SECRET_FILE = "client_secret.json"
-    APPLICATION_NAME = "test"
-
-    credentials = get_credentials()
-    http = credentials.authorize(Http())
-    service = build("calendar", "v3", http=http)
+    calendar = Calendar()
 
     pdffile, group, start, end = get_args()
     start = parse_date(start)
@@ -260,5 +245,5 @@ if __name__ == "__main__":
                     )
                 )
     for i, event in enumerate(events):
-        e = service.events().insert(calendarId="primary", body=event).execute()
+        e = calendar.service.events().insert(calendarId="primary", body=event).execute()
         print("Added %d/%d" % (i + 1, len(events)))
