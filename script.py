@@ -10,8 +10,12 @@ from httplib2 import Http
 from oauth2client import file, client, tools
 import datetime
 from dateutil.rrule import *
+
+
 from googlecalendar import Calendar
 from arguments import Arguments
+from commandline import CommandLine
+
 
 def parse_date(date, start=True):
     if start:
@@ -27,13 +31,6 @@ def next_date(date):
     date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
     date += datetime.timedelta(1)
     return date
-
-
-
-def convert(file, group):
-    pages = {"A": 0, "B": 1, "C": 2, "D": 3}
-    os.system("convert -density 300 %s[%d] %s.jpg" % (file, pages[group], file[:-4]))
-    return file[:-4] + ".jpg"
 
 
 def remove_duplicates(horizontal, vertical):
@@ -137,12 +134,13 @@ def fromstring(string):
         return [summary, description, location]
 
 
-def process(file, group):
+def process(args):
     print("converting file")
-    image = convert(file, group)
+    cmd = CommandLine()
+    image = cmd.convert(args)
     print("magic is happenning")
     c = hough_transform_p(image)
-    os.system("rm %s" %image)
+    os.system(f"rm {image}")
     return c
 
 
@@ -152,10 +150,14 @@ def add_date(c, start_date, end_date):
     for i in range(6):
         for j in range(5):
             if c[i][j].count("*") > 1:
-                s1, s2 = c[i][j].replace("\n", " ").replace("  ", " ").replace("|", "l").split(") ")
+                s1, s2 = (
+                    c[i][j].replace("\n", " ").replace("  ", " ").replace("|", "l").split(") ")
+                )
                 c[i][j] = fromstring(s1 + ")")
                 if c[i][j]:
-                    rule = str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1] + "Z"
+                    rule = (
+                        str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1] + "Z"
+                    )
                 c[i][j].extend(
                     (
                         {"dateTime": start[j] % start_date, "timeZone": "Africa/Tunis"},
@@ -165,7 +167,9 @@ def add_date(c, start_date, end_date):
                 )
                 b = fromstring(s2)
                 if b:
-                    rule = str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1] + "Z"
+                    rule = (
+                        str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1] + "Z"
+                    )
                 b.extend(
                     (
                         {
@@ -185,7 +189,8 @@ def add_date(c, start_date, end_date):
                 if c[i][j]:
                     if "*" in c[i][j][0]:
                         rule = (
-                            str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1] + "Z"
+                            str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1]
+                            + "Z"
                         )
                     else:
                         rule = str(rrule(freq=WEEKLY, until=end_date)).split("\n")[1] + "Z"
@@ -202,11 +207,10 @@ def add_date(c, start_date, end_date):
 
 if __name__ == "__main__":
     calendar = Calendar()
-
     args = Arguments()
     start = parse_date(args.start)
     end = parse_date(args.end, False) + datetime.timedelta(1)
-    classes = process(args.file, args.group)
+    classes = process(args)
     print("parsing")
     events = []
     classes = add_date(classes, start, end)
@@ -223,4 +227,4 @@ if __name__ == "__main__":
                 )
     for i, event in enumerate(events):
         e = calendar.service.events().insert(calendarId="primary", body=event).execute()
-        print("Added %d/%d" % (i + 1, len(events)))
+        print(f"Added {i+1}/{len(events)}")
