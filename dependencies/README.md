@@ -1,6 +1,6 @@
 Install the following packages:
 
-- `imagemagick`: for converting images .
+- `imagemagick`: for converting images.
 
 - `ghostscript`: for adding PDF support to `imagemagick`.
 
