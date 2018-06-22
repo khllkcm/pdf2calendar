@@ -4,6 +4,15 @@ import datetime
 
 class Arguments:
     def __init__(self):
+        def parse_date(date, start=True):
+            if start:
+                while date.weekday() != 0:
+                    date += datetime.timedelta(1)
+            else:
+                while date.weekday() != 6:
+                    date -= datetime.timedelta(1)
+            return date
+
         parser = argparse.ArgumentParser()
         parser.add_argument(
             "-f",
@@ -33,7 +42,7 @@ class Arguments:
             default="30/07/2018",
         )
         args = parser.parse_args()
-        self.file = args.file
+        self.file = args.file[:-4]
         self.group = args.group
-        self.start = datetime.datetime.strptime(args.start, "%d/%m/%Y").date()
-        self.end = datetime.datetime.strptime(args.end, "%d/%m/%Y")
+        self.start = parse_date(datetime.datetime.strptime(args.start, "%d/%m/%Y").date())
+        self.end = parse_date(datetime.datetime.strptime(args.end, "%d/%m/%Y"), False)

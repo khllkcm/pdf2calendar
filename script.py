@@ -17,16 +17,6 @@ from arguments import Arguments
 from commandline import CommandLine
 
 
-def parse_date(date, start=True):
-    if start:
-        while date.weekday() != 0:
-            date += datetime.timedelta(1)
-    else:
-        while date.weekday() != 5:
-            date -= datetime.timedelta(1)
-    return date
-
-
 def next_date(date):
     date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
     date += datetime.timedelta(1)
@@ -67,10 +57,7 @@ def auto_canny(image, sigma=0.3):
 
 def extract_text(cell):
     if cell.any():
-        cv2.imwrite(".temp.png", cell)
-        im = Image.open(".temp.png")
-        text = pytesseract.image_to_string(im, lang="essai")
-        os.system("rm .temp.png")
+        text = pytesseract.image_to_string(cell, lang="essai")
     return text if len(text) > 2 else ""
 
 
@@ -192,6 +179,7 @@ def add_date(c, start_date, end_date):
                             str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1]
                             + "Z"
                         )
+                        print(rule)
                     else:
                         rule = str(rrule(freq=WEEKLY, until=end_date)).split("\n")[1] + "Z"
                     c[i][j].extend(
@@ -208,12 +196,10 @@ def add_date(c, start_date, end_date):
 if __name__ == "__main__":
     calendar = Calendar()
     args = Arguments()
-    start = parse_date(args.start)
-    end = parse_date(args.end, False) + datetime.timedelta(1)
     classes = process(args)
     print("parsing")
     events = []
-    classes = add_date(classes, start, end)
+    classes = add_date(classes, args.start, args.end)
     for day in classes:
         for period in day:
             if period:
