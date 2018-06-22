@@ -1,0 +1,7 @@
+google-api-python-client
+numpy
+opencv-python
+pillow
+pytesseract
+oauth2client
+dateutils
