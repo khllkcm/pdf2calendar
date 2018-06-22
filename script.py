@@ -11,7 +11,7 @@ from oauth2client import file, client, tools
 import datetime
 from dateutil.rrule import *
 from googlecalendar import Calendar
-
+from arguments import Arguments
 
 def parse_date(date, start=True):
     if start:
@@ -28,30 +28,6 @@ def next_date(date):
     date += datetime.timedelta(1)
     return date
 
-
-def get_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-f",
-        "--file",
-        type=str,
-        help="PDF full path",
-        required=False,
-        default="/home/dude/calendar/emploi.pdf",
-    )
-    parser.add_argument("-g", "--group", help="A,B,C,D", type=str, required=False, default="A")
-    parser.add_argument(
-        "-s", "--start", help="Start date", type=str, required=False, default="16/06/2018"
-    )
-    parser.add_argument(
-        "-e", "--end", help="End date", type=str, required=False, default="30/07/2018"
-    )
-    args = parser.parse_args()
-    file = args.file
-    group = args.group
-    start = datetime.datetime.strptime(args.start, "%d/%m/%Y").date()
-    end = datetime.datetime.strptime(args.end, "%d/%m/%Y")
-    return file, group, start, end
 
 
 def convert(file, group):
@@ -227,10 +203,10 @@ def add_date(c, start_date, end_date):
 if __name__ == "__main__":
     calendar = Calendar()
 
-    pdffile, group, start, end = get_args()
-    start = parse_date(start)
-    end = parse_date(end, False) + datetime.timedelta(1)
-    classes = process(pdffile, group)
+    args = Arguments()
+    start = parse_date(args.start)
+    end = parse_date(args.end, False) + datetime.timedelta(1)
+    classes = process(args.file, args.group)
     print("parsing")
     events = []
     classes = add_date(classes, start, end)
