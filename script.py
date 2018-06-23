@@ -71,21 +71,19 @@ def hough_transform_p(image):
     lines = [line for line in lines if line[1] > 600]
     horizontal, vertical = sort_line_list(lines)
     horizontal, vertical = remove_duplicates(horizontal, vertical)
-    periods = []
-    for j, v in enumerate(vertical[:-1]):
-        if j > 0:
-            period = []
-            for i, h in enumerate(horizontal):
-                if i < len(horizontal) - 1 and j < len(vertical) - 1:
-                    width = horizontal[i + 1][1] - h[1]
-                    height = vertical[j + 1][0] - v[0]
-                if i < len(horizontal) - 1 and i not in [0, 4]:
-                    cell = img[h[1] + 5 : h[1] + width - 5, v[0] + 5 : v[0] + height - 5]
-                    quadrant = cell[0:15, cell.shape[1] - 15 : cell.shape[1]]
-                    if np.mean(quadrant) < 240:
-                        cv2.line(cell, (cell.shape[1], 5), (3, cell.shape[0]), (255, 255, 255), 5)
-                    period.append(extract_text(cell))
-            periods.append(period)
+    periods = [[[] for i in range(len(horizontal)-3)] for i in range(len(vertical)-2)]
+    for j, v in enumerate(vertical[1:-1],1):
+        width = vertical[j+1][0] - vertical[j][0]
+        for i, h in enumerate(horizontal[1:-1],1):
+            if i ==4:
+                continue
+            height = horizontal[i+1][1] - horizontal[i][1]
+            pos_x = v[0]; pos_y=h[1]
+            cell = img[pos_y + 5 : pos_y + height - 5, pos_x + 5 : pos_x + width - 5]
+            quadrant = cell[0:15, cell.shape[1] - 15 : cell.shape[1]]
+            if np.mean(quadrant) < 240:
+                cv2.line(cell, (cell.shape[1], 5), (3, cell.shape[0]), (255, 255, 255), 5)
+            periods[j-1][max(i-1,i%4)-1] = extract_text(cell)
     return periods
 
 
@@ -179,7 +177,6 @@ def add_date(c, start_date, end_date):
                             str(rrule(freq=WEEKLY, interval=2, until=end_date)).split("\n")[1]
                             + "Z"
                         )
-                        print(rule)
                     else:
                         rule = str(rrule(freq=WEEKLY, until=end_date)).split("\n")[1] + "Z"
                     c[i][j].extend(
