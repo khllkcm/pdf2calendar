@@ -42,12 +42,7 @@ class Arguments:
             default="30/07/2018",
         )
         parser.add_argument(
-            "-t",
-            "--timezone",
-            help="Timezone",
-            type=str,
-            required=False,
-            default="Africa/Tunis",
+            "-t", "--timezone", help="Timezone", type=str, required=False, default="Africa/Tunis"
         )
         args = parser.parse_args()
         self.file = args.file[:-4]

@@ -4,7 +4,6 @@ from oauth2client import file, client, tools
 
 
 class Calendar:
-
     SCOPES = "https://www.googleapis.com/auth/calendar"
 
     def __init__(self, credentials_file="credentials.json", client_secret="client_secret.json"):

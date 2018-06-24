@@ -5,7 +5,6 @@ import pytesseract
 
 class Cell:
     def __init__(self, image, vertical, j, horizontal, i):
-
         self.padding = 5
         self.x = vertical[j][0] + self.padding
         self.y = horizontal[i][1] + self.padding
