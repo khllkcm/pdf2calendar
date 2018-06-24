@@ -1,4 +1,4 @@
-from commandline import CommandLine, Arguments
+from cmd import CommandLine, Arguments
 from table import Table
 from event import Event
 from utils import Calendar

@@ -1,5 +1,5 @@
 import datetime
-from utils import *
+import utils
 from dateutil.rrule import *
 
 
@@ -12,10 +12,10 @@ class Event:
         end = ends[cell.row] % str(start_date + datetime.timedelta(cell.col))
         self.start = {"dateTime": start, "timeZone": timezone}
         self.end = {"dateTime": end, "timeZone": timezone}
-        self.summary = parse_summary(cell.text)
-        self.description = parse_description(cell.text)
-        self.location = parse_location(cell.text)
-        self.freq = parse_freq(cell.text, end_date)
+        self.summary = utils.parse_summary(cell.text)
+        self.description = utils.parse_description(cell.text)
+        self.location = utils.parse_location(cell.text)
+        self.freq = utils.parse_freq(cell.text, end_date)
 
     def format(self):
         return {
