@@ -41,8 +41,17 @@ class Arguments:
             required=False,
             default="30/07/2018",
         )
+        parser.add_argument(
+            "-t",
+            "--timezone",
+            help="Timezone",
+            type=str,
+            required=False,
+            default="Africa/Tunis",
+        )
         args = parser.parse_args()
         self.file = args.file[:-4]
         self.group = args.group
         self.start = parse_date(datetime.datetime.strptime(args.start, "%d/%m/%Y").date())
         self.end = parse_date(datetime.datetime.strptime(args.end, "%d/%m/%Y"), False)
+        self.timezone = args.timezone

@@ -84,7 +84,7 @@ if __name__ == "__main__":
     args = Arguments()
     classes = process(args)
     print("parsing")
-    events = [Event(c, args.start, args.end) for c in classes if c.text]
+    events = [Event(c, args.start, args.end, args.timezone) for c in classes if c.text]
     for i, event in enumerate(events):
         e = calendar.service.events().insert(calendarId="primary", body=event.format()).execute()
         print(f"Added {i+1}/{len(events)}")
