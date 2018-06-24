@@ -45,7 +45,7 @@ class Arguments:
             help="schedule start date.",
             type=str,
             required=False,
-            default="16/06/2018",
+            default="16/01/2018",
         )
         parser.add_argument(
             "-e",
@@ -53,7 +53,7 @@ class Arguments:
             help="schedule end date.",
             type=str,
             required=False,
-            default="30/07/2018",
+            default="30/04/2018",
         )
         parser.add_argument(
             "-t", "--timezone", help="Timezone", type=str, required=False, default="Africa/Tunis"
