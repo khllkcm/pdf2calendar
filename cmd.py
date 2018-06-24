@@ -33,18 +33,18 @@ class Arguments:
             "--file",
             type=str,
             help="Path to PDF.",
-            required=False,
+            required=True,
             default="input/table.pdf",
         )
         parser.add_argument(
-            "-g", "--group", help="class group: A,B,C,D", type=str, required=False, default="A"
+            "-g", "--group", help="class group: A,B,C,D", type=str, required=True, default="A"
         )
         parser.add_argument(
             "-s",
             "--start",
             help="schedule start date.",
             type=str,
-            required=False,
+            required=True,
             default="16/01/2018",
         )
         parser.add_argument(
@@ -52,7 +52,7 @@ class Arguments:
             "--end",
             help="schedule end date.",
             type=str,
-            required=False,
+            required=True,
             default="30/04/2018",
         )
         parser.add_argument(
