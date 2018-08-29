@@ -2,5 +2,5 @@ google-api-python-client
 numpy
 opencv-python
 pytesseract
-oauth2client
+google_auth_oauthlib
 dateutils

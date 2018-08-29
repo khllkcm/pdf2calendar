@@ -1,20 +1,14 @@
 import re
 from dateutil.rrule import *
 from apiclient.discovery import build
-from httplib2 import Http
-from oauth2client import file, client, tools
-
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 class Calendar:
-    SCOPES = "https://www.googleapis.com/auth/calendar"
 
-    def __init__(self, credentials_file="credentials.json", client_secret="client_secret.json"):
-        store = file.Storage(credentials_file)
-        creds = store.get()
-        if not creds or creds.invalid:
-            flow = client.flow_from_clientsecrets(client_secret, Calendar.SCOPES)
-            creds = tools.run_flow(flow, store)
-        self.service = build("calendar", "v3", http=creds.authorize(Http()))
+    def __init__(self):
+        flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", ["https://www.googleapis.com/auth/calendar"])
+        credentials = flow.run_console()
+        self.service = build('calendar', 'v3', credentials = credentials)
 
 
 def search(regex, string, other_regex=r".*"):

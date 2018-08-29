@@ -19,3 +19,5 @@ if __name__ == "__main__":
     for i, event in enumerate(events):
         e = calendar.service.events().insert(calendarId="primary", body=event.format()).execute()
         print(f"Added {i+1}/{len(events)} events.")
+        print(event.summary)
+        print(event.start)
