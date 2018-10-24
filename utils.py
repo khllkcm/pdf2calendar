@@ -24,7 +24,7 @@ def search(regex, string, other_regex=r".*"):
 
 def parse_summary(string):
     regex = [
-        r"(^|(?<=\) ))[a-z|A-Z].*?(?= \w\.| [A-Z]\w+(?= (S|s)a| Lab))",
+        r"(^|(?<=\) ))[a-z|A-Z].*?(?= \w\.|\w \.| [A-Z]\w+(?= (S|s)a| Lab))",
         r"(^[a-z|A-Z]|(?<=\) )).*?(?= [a-z][A-Z].* ((S|s)a|Lab))",
         r"\(.+?\)",
         r"(?<= )\w[A-Z].+?(?= (S|s)a| Lab)",
@@ -44,7 +44,7 @@ def parse_location(string):
 
 
 def parse_description(string):
-    regex = r"(?<= )(\w\..+?|[A-Z]\w+)(?= (S|s)a| Lab)"
+    regex = r"(?<= )(\w\..+?|\w \..+?|[A-Z]\w+)(?= (S|s)a| Lab)"
     if string:
         description = search(regex, string)
         return description
