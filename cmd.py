@@ -58,9 +58,15 @@ class Arguments:
         parser.add_argument(
             "-t", "--timezone", help="Timezone", type=str, required=False, default="Africa/Tunis"
         )
+
+        parser.add_argument(
+            "-r", "--ramadan", help="Ramadan", type=lambda x: (str(x).lower() == 'true'), required=False, default=False
+        )
+
         args = parser.parse_args()
         self.file = args.file[:-4]
         self.group = args.group
         self.start = parse_date(datetime.datetime.strptime(args.start, "%d/%m/%Y").date())
         self.end = parse_date(datetime.datetime.strptime(args.end, "%d/%m/%Y"), False)
         self.timezone = args.timezone
+        self.ramadan = args.ramadan

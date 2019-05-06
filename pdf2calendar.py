@@ -13,7 +13,7 @@ if __name__ == "__main__":
     print("Extracting cells from table...")
     cells = table.extract_cells()
     print("Parsing cells...")
-    events = [Event(cell, args.start, args.end, args.timezone) for cell in cells if cell.text]
+    events = [Event(cell, args.start, args.end, args.timezone, args.ramadan) for cell in cells if cell.text]
     print("Inserting events into Google Calendar...")
     calendar = Calendar()
     for i, event in enumerate(events):

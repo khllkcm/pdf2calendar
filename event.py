@@ -4,10 +4,13 @@ from dateutil.rrule import *
 
 
 class Event:
-    def __init__(self, cell, start_date, end_date, timezone):
+    def __init__(self, cell, start_date, end_date, timezone, ramadan):
 
         starts = ["%sT08:30:00", "%sT10:10:00", "%sT11:50:00", "%sT14:20:00", "%sT16:00:00"]
         ends = ["%sT10:00:00", "%sT11:40:00", "%sT13:20:00", "%sT15:50:00", "%sT17:30:00"]
+        if ramadan:
+                starts = ["%sT08:30:00", "%sT09:55:00", "%sT11:20:00", "%sT13:05:00", "%sT14:30:00"]
+                ends = ["%sT09:45:00", "%sT11:10:00", "%sT12:35:00", "%sT14:20:00", "%sT15:45:00"]
         start = starts[cell.row] % str(start_date + datetime.timedelta(cell.col))
         end = ends[cell.row] % str(start_date + datetime.timedelta(cell.col))
         self.start = {"dateTime": start, "timeZone": timezone}
